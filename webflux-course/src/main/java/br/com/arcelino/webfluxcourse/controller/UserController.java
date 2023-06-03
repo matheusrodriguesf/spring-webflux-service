@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Flux<UserResponse>> findAll() {
-        return null;
+        return ResponseEntity.ok().body(userService.findAll());
     }
 
     @PutMapping(value = "/{id}")
