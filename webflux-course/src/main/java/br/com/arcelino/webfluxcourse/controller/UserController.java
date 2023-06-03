@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping(value = "/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     @PostMapping
@@ -32,9 +33,12 @@ public class UserController {
         return userService.save(userRequest).then();
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Mono<UserResponse>> findById(@PathVariable String id) {
-        return null;
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<ResponseEntity<UserResponse>> findById(@PathVariable String id) {
+        return userService.findById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @GetMapping
