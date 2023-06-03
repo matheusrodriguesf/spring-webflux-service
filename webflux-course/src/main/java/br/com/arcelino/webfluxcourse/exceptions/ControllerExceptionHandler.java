@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.support.WebExchangeBindException;
 
 import reactor.core.publisher.Mono;
 
@@ -25,6 +26,23 @@ public class ControllerExceptionHandler {
                 .path(request.getPath().toString())
                 .build();
         return ResponseEntity.badRequest().body(Mono.just(error));
+    }
+
+    @ExceptionHandler(WebExchangeBindException.class)
+    public ResponseEntity<Mono<ValidationError>> validationError(WebExchangeBindException ex,
+            ServerHttpRequest request) {
+        ValidationError error = new ValidationError(
+                LocalDateTime.now(),
+                request.getPath().toString(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation error",
+                "Erro ao validar campos");
+
+        ex.getFieldErrors()
+                .forEach(fieldError -> error.addError(fieldError.getField(), fieldError.getDefaultMessage()));
+
+        return ResponseEntity.badRequest().body(Mono.just(error));
+
     }
 
     private String verifyDuplicateKeyExceptionMessage(String message) {

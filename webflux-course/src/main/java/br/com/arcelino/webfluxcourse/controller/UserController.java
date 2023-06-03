@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.arcelino.webfluxcourse.model.request.UserRequest;
 import br.com.arcelino.webfluxcourse.model.response.UserResponse;
 import br.com.arcelino.webfluxcourse.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,7 +28,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> save(@RequestBody UserRequest userRequest) {
+    public Mono<Void> save(@Valid @RequestBody UserRequest userRequest) {
         return userService.save(userRequest).then();
     }
 
