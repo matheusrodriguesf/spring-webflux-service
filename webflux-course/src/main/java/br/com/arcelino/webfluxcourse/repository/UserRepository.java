@@ -1,6 +1,8 @@
 package br.com.arcelino.webfluxcourse.repository;
 
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.arcelino.webfluxcourse.entity.User;
@@ -24,5 +26,10 @@ public class UserRepository {
 
     public Flux<User> findAll() {
         return reactiveMongoTemplate.findAll(User.class);
+    }
+
+    public Mono<User> deleteById(final String id) {
+        var query = Query.query(Criteria.where("id").is(id));
+        return reactiveMongoTemplate.findAndRemove(query, User.class);
     }
 }

@@ -47,13 +47,15 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Mono<UserResponse>> update(@PathVariable String id, @RequestBody UserRequest userRequest) {
-        return null;
+        return ResponseEntity.ok().body(userService.update(id, userRequest));
     }
 
     @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Mono<Void>> delete(@PathVariable String id) {
-        return null;
+        return ResponseEntity.ok().body(userService.delete(id).then());
     }
 
 }
